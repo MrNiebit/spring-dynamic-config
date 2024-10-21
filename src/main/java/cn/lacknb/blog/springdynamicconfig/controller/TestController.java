@@ -1,5 +1,10 @@
 package cn.lacknb.blog.springdynamicconfig.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.MutablePropertySources;
+import org.springframework.core.env.PropertySource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,9 +21,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test")
 public class TestController {
 
+    @Autowired
+    private ConfigurableEnvironment environment;
+
+    @Value("${user.account}")
+    private String userAccount;
+
     @RequestMapping("/hello")
     public String hello(String name) {
-        return "hello " + name;
+        return userAccount + " -> hello -> " + name;
+    }
+
+    @RequestMapping("/config")
+    public String config() {
+        MutablePropertySources propertySources = environment.getPropertySources();
+        for (PropertySource<?> propertySource : propertySources) {
+            System.out.println(propertySource.getName());
+            System.out.println(propertySource.getSource());
+        }
+        return "environment";
     }
 
 }
