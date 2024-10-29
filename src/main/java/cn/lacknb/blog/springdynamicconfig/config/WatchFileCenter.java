@@ -1,8 +1,12 @@
 package cn.lacknb.blog.springdynamicconfig.config;
 
+import cn.lacknb.blog.springdynamicconfig.model.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
@@ -46,8 +50,8 @@ public class WatchFileCenter {
     @Autowired
     private ConfigurableEnvironment environment;
 
-    private static final Map<String, Object> SOURCES = new ConcurrentHashMap<>();
-
+    @Autowired
+    private User user;
 
     private void refreshEnv() {
         // 使用 PropertiesLoaderUtils 加载属性文件
@@ -73,6 +77,8 @@ public class WatchFileCenter {
                     new PropertiesPropertySource(key, properties));
             log.info("配置刷新~");
             // TODO 刷新Bean
+            user.setAccount(properties.getProperty("user.account"));
+            user.setName(properties.getProperty("user.name"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

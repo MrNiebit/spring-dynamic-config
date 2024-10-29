@@ -1,5 +1,6 @@
 package cn.lacknb.blog.springdynamicconfig.controller;
 
+import cn.lacknb.blog.springdynamicconfig.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -27,9 +28,17 @@ public class TestController {
     @Value("${user.account}")
     private String userAccount;
 
+    @Autowired
+    private User user;
+
     @RequestMapping("/hello")
     public String hello(String name) {
         return userAccount + " -> hello -> " + name;
+    }
+
+    @RequestMapping("/user")
+    public User user() {
+        return user;
     }
 
     @RequestMapping("/config")
